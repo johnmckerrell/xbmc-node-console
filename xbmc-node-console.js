@@ -1,12 +1,34 @@
 var sprintf = require('sprintf').sprintf;
 var xbmc_utils = require('./xbmc-time-adder');
 var xbmc_rpc = require('node-xbmc-rpc');
-var CONFIG = require('config').Config;
+var configs = require('config');
+
+var config = null;
+var configKey = null;
+
+for (var k in configs) {
+    if (!config) {
+        config = configs[k];
+        configKey = k;
+    }
+    if (process.argv.length > 2 && k == process.argv[2]) {
+        config = configs[k];
+        configKey = k;
+        break;
+    }
+}
+
+if (process.argv.length > 2 && configKey != process.argv[2]) {
+    process.stdout.write("Couldn't find config for environment: "+process.argv[2]+"\n");
+    process.exit();
+}
+
+process.stdout.write("Connecting to XBMC: "+configKey+"\n");
 
 var xbmc = new xbmc_rpc({
-    url: CONFIG.xbmc.url,
-    user: CONFIG.xbmc.username,
-    password: CONFIG.xbmc.password,
+    url: config.xbmc.url,
+    user: config.xbmc.username,
+    password: config.xbmc.password,
 });
 
 var stdin = process.stdin;
@@ -47,11 +69,11 @@ function output_prompt(message) {
     last_prompt_length = prompt_length;
 }
 
-var initial_sweep = CONFIG.advert.delay_bisect
-var start_period = CONFIG.advert.start_period;
-var minimum_period = CONFIG.advert.minimum_period;
+var initial_sweep = config.advert.delay_bisect
+var start_period = config.advert.start_period;
+var minimum_period = config.advert.minimum_period;
 var current_period = start_period;
-var user_period = CONFIG.general.user_period;
+var user_period = config.general.user_period;
 var parsed_number = '';
 var last_key = ' ';
 
@@ -97,7 +119,7 @@ stdin.on( 'data', function( key ){
             break;
         case 'r':
             current_period = start_period;
-            initial_sweep = CONFIG.advert.delay_bisect;
+            initial_sweep = config.advert.delay_bisect;
             break;
         case 'a':
             skip_period = current_period;

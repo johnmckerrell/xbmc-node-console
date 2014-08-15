@@ -1,8 +1,28 @@
-Config:
+# Root key is the name of the environment, use multiple keys
+# for different environments, this file contains LivingRoom & Kitchen.
+LivingRoom:
 # XBMC config
     xbmc:
 # URL to your install
         url:        "192.168.0.13"
+# Username and password for your install
+#        username:
+#        password:
+
+# Advert skipping options
+    advert:
+# Don't bisect until you've found the program
+# Set to false if you want to bisect after the first iteration
+        delay_bisect: true
+        start_period: 250
+        minimum_period: 10
+    general:
+        user_period: 20
+Kitchen:
+# XBMC config
+    xbmc:
+# URL to your install
+        url:        "192.168.0.21"
 # Username and password for your install
 #        username:
 #        password:
