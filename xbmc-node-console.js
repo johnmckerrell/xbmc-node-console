@@ -82,7 +82,14 @@ output_prompt();
 var PLAY_KEY = "\33\133\61\71\176",
     PREV_KEY = "\33\133\61\70\176",
     NEXT_KEY = "\33\133\62\60\176",
-    ENTER_KEY = "\15";
+    ENTER_KEY = "\15"
+    UP_KEY = "\33\133\101",
+    DOWN_KEY = "\33\133\102",
+    LEFT_KEY = "\33\133\104",
+    RIGHT_KEY = "\33\133\103",
+    TAB_KEY = "\11",
+    ESC_KEY = "\33",
+    ALT_S_KEY = "\337";
 
 // on any data into stdin
 stdin.on( 'data', function( key ){
@@ -130,8 +137,12 @@ stdin.on( 'data', function( key ){
             break;
         case ENTER_KEY:
             var period = parseInt(parsed_number);
-            if (period > 0 && ! isNaN(period)) {
-                user_period = period;
+            if (parsed_number.length > 0) {
+                if (period > 0 && ! isNaN(period)) {
+                    user_period = period;
+                }
+            } else {
+                xbmc.input.select();
             }
             last_key = '↵';
             break;
@@ -141,6 +152,9 @@ stdin.on( 'data', function( key ){
                 //console.log(r);
             });
             last_key = 'p';
+            break;
+        case '=':
+            xbmc.player.setSubtitle({"subtitle":true});
             break;
         case '.':
         case '>':
@@ -157,6 +171,37 @@ stdin.on( 'data', function( key ){
         case 'q':
             process.stdout.write("\n");
             process.exit();
+            break;
+        case ESC_KEY:
+            xbmc.input.back();
+            last_key = '⎋';
+            break;
+        case TAB_KEY:
+            xbmc.input.info();
+            for (var func in xbmc.input) {
+                console.log("func="+func);
+            }
+            last_key = '⇆';
+            break;
+        case UP_KEY:
+            xbmc.input.up();
+            last_key = '⬆︎';
+            break;
+        case DOWN_KEY:
+            xbmc.input.down();
+            last_key = '⬇︎';
+            break;
+        case LEFT_KEY:
+            xbmc.input.left();
+            last_key = '⬅︎';
+            break;
+        case RIGHT_KEY:
+            xbmc.input.right();
+            last_key = '➡︎';
+            break;
+        case ALT_S_KEY:
+            xbmc.player.stop();
+            last_key = '◼︎';
             break;
         default:
             var codes = [];
