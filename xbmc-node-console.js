@@ -178,9 +178,6 @@ stdin.on( 'data', function( key ){
             break;
         case TAB_KEY:
             xbmc.input.info();
-            for (var func in xbmc.input) {
-                console.log("func="+func);
-            }
             last_key = '⇆';
             break;
         case UP_KEY:
